@@ -7,6 +7,25 @@ import scala.concurrent.Await
 
 import scala.concurrent.duration._
 
+object domain {
+  type Result[A] = Future[A]
+
+  sealed trait Command
+  final case class GetAvailability(user: Int, replyTo: ActorRef[SessionEvent])
+  extends Command
+
+
+  class TradingDeskAPI(router: ActorSystem[Message]) {
+    def getAvailability(user: Int, schedule: Int): Result[Long] = {
+      // hidden implementation detail
+      router ? GetAvailability(int, _)
+    }
+  }
+
+}
+
+
+
 object HelloWorld {
   final case class Greet(whom: String, replyTo: ActorRef[Greeted])
   final case class Greeted(whom: String)
@@ -16,8 +35,6 @@ object HelloWorld {
     msg.replyTo ! Greeted(msg.whom)
   }
 }
-
-
 
 object Main extends App {
   import scala.concurrent.ExecutionContext.Implicits.global
